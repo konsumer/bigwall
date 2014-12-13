@@ -2,7 +2,8 @@ $(function(){
   var socket = io.connect();
 
   function addPost(post){
-    $(bigpicture.newText(post.x, post.y, post.size, post.text)).attr('id', post.uuid);
+    var el = bigpicture.newText(post.x, post.y, post.size, emojione.toImage(post.text));
+    $(el).attr('id', post.uuid);
   }
 
   socket.on('user:update', function(c){
@@ -21,7 +22,7 @@ $(function(){
         .data('x', post.x)
         .data('y', post.y)
         .data('size', post.size)
-        .text(post.text)
+        .html(emojione.toImage(post.text))
         .get(0)
     );
   });
@@ -31,7 +32,7 @@ $(function(){
   });
 
   socket.emit('hi', function(posts){
-    posts.forEach(function(post){
+    _.each(posts, function(post){
       addPost(post);
     });
   });
@@ -49,8 +50,9 @@ $(function(){
           x: $e.data('x'),
           y: $e.data('y'),
           size: $e.data('size'),
-          text: text
+          text: emojione.toShort(text)
         };
+        $e.html(emojione.toImage(text));
         socket.emit('post:update', post);
       }
     }else{
