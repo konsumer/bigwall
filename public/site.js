@@ -60,7 +60,7 @@ $(function(){
         x: $e.data('x'),
         y: $e.data('y'),
         size: $e.data('size'),
-        text: text
+        text: emojione.toShort(text)
       };
       socket.emit('post:create', post, function(id){
         $e.attr('id', id);
